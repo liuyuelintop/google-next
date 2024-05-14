@@ -1,5 +1,7 @@
 import WebSearchResults from '@/components/WebSearchResults';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 async function fetchWebSearchResults(searchParams) {
     const startIndex = searchParams.start || '1';
@@ -8,10 +10,18 @@ async function fetchWebSearchResults(searchParams) {
     );
     if (!response.ok) throw new Error('Something went wrong');
     const data = await response.json();
-    return data.items;
+    return data;
 }
 
 export default async function WebSearchPage({ searchParams }) {
+    return (
+        <Suspense fallback={<Loading />}>
+            <WebSearchContent searchParams={searchParams} />
+        </Suspense>
+    );
+}
+
+async function WebSearchContent({ searchParams }) {
     const results = await fetchWebSearchResults(searchParams);
 
     if (!results || results.length === 0) {
@@ -30,5 +40,5 @@ export default async function WebSearchPage({ searchParams }) {
         );
     }
 
-    return <WebSearchResults results={results} />;
+    return <div>{results.items && <WebSearchResults results={results} />} </div>;
 }

@@ -1,5 +1,7 @@
 import ImageSearchResults from '@/components/ImageSearchResults';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 async function fetchSearchResults(searchParams) {
     const startIndex = searchParams.start || '1';
@@ -8,10 +10,17 @@ async function fetchSearchResults(searchParams) {
     );
     if (!response.ok) throw new Error('Something went wrong');
     const data = await response.json();
-    return data.items;
+    return data;
 }
 
-export default async function ImageSearchPage({ searchParams }) {
+export default async function WebSearchPage({ searchParams }) {
+    return (
+        <Suspense fallback={<Loading />}>
+            <ImageSearchContent searchParams={searchParams} />
+        </Suspense>
+    );
+}
+async function ImageSearchContent({ searchParams }) {
     const results = await fetchSearchResults(searchParams);
 
     if (!results || results.length === 0) {
@@ -30,5 +39,6 @@ export default async function ImageSearchPage({ searchParams }) {
         );
     }
 
-    return <ImageSearchResults results={results} />;
+    return <div>{results.items && <ImageSearchResults results={results} />} </div>;
 }
+
