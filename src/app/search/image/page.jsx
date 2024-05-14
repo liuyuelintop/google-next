@@ -1,29 +1,17 @@
 import ImageSearchResults from '@/components/ImageSearchResults';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import Loading from './loading';
 
-async function fetchSearchResults(searchParams) {
+export default async function ImageSearchPage({ searchParams }) {
     const startIndex = searchParams.start || '1';
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await fetch(
-        `https://www.googleapis.com/customsearch/v1?key=${process.env.API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}&searchType=image&start=${startIndex}`
+        `https://www.googleapis.com/customsearch/v1?key=${process.env.API_KEY}&cx=${process.env.CONTEXT_KEY}&q=${searchParams.searchTerm}'}&searchType=image&start=${startIndex}`
     );
     if (!response.ok) throw new Error('Something went wrong');
     const data = await response.json();
-    return data;
-}
+    const results = data.items;
 
-export default async function WebSearchPage({ searchParams }) {
-    return (
-        <Suspense fallback={<Loading />}>
-            <ImageSearchContent searchParams={searchParams} />
-        </Suspense>
-    );
-}
-async function ImageSearchContent({ searchParams }) {
-    const results = await fetchSearchResults(searchParams);
-
-    if (!results || results.length === 0) {
+    if (!results) {
         return (
             <div className='flex flex-col justify-center items-center pt-10'>
                 <h1 className='text-3xl mb-4'>
@@ -39,6 +27,5 @@ async function ImageSearchContent({ searchParams }) {
         );
     }
 
-    return <div>{results.items && <ImageSearchResults results={results} />} </div>;
+    return <div>{results && <ImageSearchResults results={data} />}</div>;
 }
-

@@ -13,6 +13,7 @@ export default function Home() {
           width={272}
           height={92}
           priority
+          style={{ width: "auto" }}
         />
         <HomeSearch />
       </div>
