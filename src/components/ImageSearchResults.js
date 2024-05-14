@@ -1,6 +1,5 @@
 import Link from "next/link";
 import PaginationButtons from "./PaginationButtons";
-
 export default function ImageSearchResults({ results }) {
   return (
     <div className="sm:pb-24 pb-40 mt-4">

@@ -1,7 +1,8 @@
 import WebSearchResults from '@/components/WebSearchResults';
 import Link from 'next/link';
-import React from 'react'
-export default async function WebSearchPage({ searchParams }) {
+import { React, Suspense } from 'react';
+import Loading from './loading';
+const _WebSearchPage = async ({ searchParams }) => {
     const startIndex = searchParams.start || '1';
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -27,5 +28,12 @@ export default async function WebSearchPage({ searchParams }) {
         );
     }
     return <div>{results && <WebSearchResults results={data} />}</div>;
+}
 
+export default function WebSearchPage(props) {
+    return (
+        <Suspense fallback={<Loading />}>
+            <_WebSearchPage {...props} />
+        </Suspense>
+    );
 }
