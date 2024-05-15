@@ -1,4 +1,4 @@
-export default function loading() {
+export default function ImageSkeleton() {
     return (
         <div className='pt-10 mx-2 lg:pl-52 max-w-6xl flex sm:space-x-4 flex-col sm:flex-row pb-42'>
             <div className='animate-pulse'>
